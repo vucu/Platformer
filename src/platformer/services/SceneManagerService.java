@@ -25,7 +25,6 @@ public class SceneManagerService {
 				break;
 
 			case PLAY_SCENE:
-				Builder.buildPlayScene();
 				break;
 			default:
 				// Player just enter an invalid scene, nothing will change
