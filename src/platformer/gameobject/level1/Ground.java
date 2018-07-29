@@ -27,14 +27,14 @@ public class Ground extends GameObject implements ICollider, ITransform, IDrawab
 	@Override
 	public Position getPosition() {
 		int x = 0;
-		int y = world.height - 200;
+		int y = world.height - 50;
 		return new Position(x, y);
 	}
 
 	@Override
 	public Shape getCollisionMask() {
 		Position position = getPosition();
-		return new Rectangle(position.x, position.y, world.width, 200);
+		return new Rectangle(position.x, position.y, world.width, 50);
 	}
 
 	@Override

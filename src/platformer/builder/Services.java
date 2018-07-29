@@ -25,7 +25,7 @@ public class Services {
 	}
 
 	// The size of the game world
-	public final Rectangle world = new Rectangle(0, 0, 3000, 800);
+	public final Rectangle world = new Rectangle(0, 0, 3000, 600);
 
 	// The size of the display
 	public final Rectangle display = new Rectangle(0, 0, 1000, 600);

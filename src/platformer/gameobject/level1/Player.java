@@ -38,7 +38,7 @@ public class Player extends GameObject implements ICollider, ITransform, IUpdata
 
 	@Override
 	public Position getPosition() {
-		return new Position(400,400);
+		return new Position(200,200);
 	}
 
 	@Override
@@ -60,8 +60,9 @@ public class Player extends GameObject implements ICollider, ITransform, IUpdata
 
 	@Override
 	public void onDraw(Graphics g) {
+		Rectangle mask = (Rectangle) this.getCollisionMask();
 		g.setColor(Color.CYAN);
-		g.fillRect(200, 200, 400, 400);
+		g.fillRect(mask.x, mask.y, mask.width, mask.height);
 	}
 
 }
