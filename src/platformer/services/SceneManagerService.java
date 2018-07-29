@@ -21,7 +21,7 @@ public class SceneManagerService {
 
 			switch (scene) {
 			case TITLE_SCENE:
-				Builder.buildTitleScene();
+				Builder.buildLevel1();
 				break;
 
 			case PLAY_SCENE:

@@ -9,11 +9,11 @@ import platformer.services.*;
 import platformer.services.delegates.Camera;
 import platformer.services.delegates.Remover;
 
-public class ServiceBuilder {
+public class Services {
 	public static final int TITLE_SCENE = 0;
 	public static final int PLAY_SCENE = 1;
 
-	ServiceBuilder(int settings) {
+	Services(int settings) {
 		switch (settings) {
 		case TITLE_SCENE:
 			cameras = new Camera[] { new Camera(world, display.width, display.height) };
