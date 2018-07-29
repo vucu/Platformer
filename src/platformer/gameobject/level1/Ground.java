@@ -32,9 +32,8 @@ public class Ground extends GameObject implements ICollider, ITransform, IDrawab
 	}
 
 	@Override
-	public Shape getCollisionMask() {
-		Position position = getPosition();
-		return new Rectangle(position.x, position.y, world.width, 50);
+	public Shape getCollisionMask(Position at) {
+		return new Rectangle(at.x, at.y, world.width, 50);
 	}
 
 	@Override
@@ -50,7 +49,7 @@ public class Ground extends GameObject implements ICollider, ITransform, IDrawab
 
 	@Override
 	public void onDraw(Graphics g) {
-		Rectangle mask = (Rectangle) this.getCollisionMask();
+		Rectangle mask = (Rectangle) this.getCollisionMask(this.getPosition());
 		g.setColor(Color.PINK);
 		g.fillRect(mask.x, mask.y, mask.width, mask.height);
 	}

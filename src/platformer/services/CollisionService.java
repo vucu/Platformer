@@ -32,7 +32,7 @@ public class CollisionService {
 	public <T extends ICollider> boolean checkCollisionAtPoint(Class<T> type, Point2D p) {
 		for (ICollider c : colliders) {
 			if (type.isAssignableFrom(c.getClass())) {
-				Shape mask = c.getCollisionMask();
+				Shape mask = c.getCollisionMask(c.getPosition());
 				if (mask.contains(p))
 					return true;
 			}
@@ -46,22 +46,13 @@ public class CollisionService {
 			int xDisplacement, 
 			int yDisplacement,
 			Class<T> otherType) {
-		// Note: It only works with rectangles
-		if (!(me.getCollisionMask() instanceof Rectangle2D)) {
-			throw new RuntimeException("Only works with Rectangle");
-		}
-			
-		for (ICollider c : colliders) {
-			if (c != me && otherType.isAssignableFrom(c.getClass())) {
-				Shape myMask = me.getCollisionMask();
-				Shape otherMask = c.getCollisionMask();
+		for (ICollider other : colliders) {
+			if (other != me && otherType.isAssignableFrom(other.getClass())) {
+				Shape myMask = me.getCollisionMask(me.getPosition().getTranslation(xDisplacement, yDisplacement));
+				Shape otherMask = other.getCollisionMask(other.getPosition());
 				
-				if (myMask instanceof Rectangle2D) {
-					Rectangle2D rect = (Rectangle) myMask;
-					rect.setRect(rect.getX()+xDisplacement, rect.getY()+yDisplacement, rect.getWidth(), rect.getHeight());
-					if (otherMask.intersects(rect)) {
-						return true;
-					}
+				if (this.testIntersectionEfficient(myMask, otherMask)) {
+					return true;
 				}
 			}
 		}
@@ -78,8 +69,8 @@ public class CollisionService {
 		for (ICollider me : colliders) {
 			for (ICollider other : colliders) {
 				if (me != other) {
-					Shape myShape = me.getCollisionMask();
-					Shape otherShape = other.getCollisionMask();
+					Shape myShape = me.getCollisionMask(me.getPosition());
+					Shape otherShape = other.getCollisionMask(other.getPosition());
 					
 					boolean intersect = this.testIntersectionEfficient(myShape, otherShape);
 					

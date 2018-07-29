@@ -10,7 +10,7 @@ import platformer.datastructures.Position;
 import platformer.gameobject.GameObject;
 import platformer.gameobject.properties.*;
 
-public class Player extends GameObject implements ICollider, ITransform, IUpdatable, IDrawable {
+public class Player extends GameObject implements ICollider, IUpdatable, IDrawable {
 	private final Services services; 
 	
 	private final double grav = 0.2;
@@ -40,20 +40,20 @@ public class Player extends GameObject implements ICollider, ITransform, IUpdata
 
 	@Override
 	public void onUpdateEnd() {
-		// TODO Auto-generated method stub it is a bit slow 
+		
 	}
 	
 	int x = 200;
 	int y = 200;
+	
 	@Override
 	public Position getPosition() {
 		return new Position(x, y);
 	}
 
 	@Override
-	public Shape getCollisionMask() {
-		Position position = this.getPosition();
-		return new Rectangle(position.x, position.y, 20, 20);
+	public Shape getCollisionMask(Position at) {
+		return new Rectangle(at.x, at.y, 20, 20);
 	}
 
 	@Override
@@ -69,7 +69,7 @@ public class Player extends GameObject implements ICollider, ITransform, IUpdata
 
 	@Override
 	public void onDraw(Graphics g) {
-		Rectangle mask = (Rectangle) this.getCollisionMask();
+		Rectangle mask = (Rectangle) this.getCollisionMask(this.getPosition());
 		g.setColor(Color.CYAN);
 		g.fillRect(mask.x, mask.y, mask.width, mask.height);
 	}
