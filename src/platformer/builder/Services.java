@@ -10,25 +10,12 @@ import platformer.services.delegates.Camera;
 import platformer.services.delegates.Remover;
 
 public class Services {
-	public static final int TITLE_SCENE = 0;
-	public static final int PLAY_SCENE = 1;
+	static final int LEVEL_1 = 1;
 
 	Services(int settings) {
 		switch (settings) {
-		case TITLE_SCENE:
+		case LEVEL_1:
 			cameras = new Camera[] { new Camera(world, display.width, display.height) };
-			break;
-		case PLAY_SCENE:
-			cameras = new Camera[3];
-			cameras[0] = new Camera(world, 0, 0, display.width / 2 - 4, display.height);
-			cameras[1] = new Camera(world, display.width / 2 + 4, 0, display.width / 2, display.height);
-
-			double minimapScale = 0.1;
-			int minimapW = (int) (world.width * minimapScale);
-			int minimapH = (int) (world.height * minimapScale);
-			int minimapX = display.width / 2 - minimapW / 2;
-			int minimapY = display.height - minimapH - 30;
-			cameras[2] = new Camera(world, minimapX, minimapY, world.width, world.height, 0.1);
 			break;
 		default:
 			throw new RuntimeException("Invalid build setting");
@@ -38,10 +25,10 @@ public class Services {
 	}
 
 	// The size of the game world
-	public final Rectangle world = new Rectangle(0, 0, 1200, 1200);
+	public final Rectangle world = new Rectangle(0, 0, 3000, 800);
 
 	// The size of the display
-	public final Rectangle display = new Rectangle(0, 0, 800, 480);
+	public final Rectangle display = new Rectangle(0, 0, 1000, 600);
 
 	// The size of a grid
 	public final int gridSize = 32;

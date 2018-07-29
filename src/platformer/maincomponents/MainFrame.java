@@ -23,7 +23,7 @@ public class MainFrame extends JFrame {
 		add(panel);
 
 		// Setup window
-		setTitle("Test");
+		setTitle("Platformer");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setResizable(false);
 		setSize(display.width, display.height);
