@@ -14,18 +14,6 @@ import platformer.services.delegates.Remover;
 
 //Manage collisions and raise collision events
 public class CollisionService {
-	public boolean checkCollisionAtPoint(Point2D p, Class type) {
-		for (ICollider c : colliders) {
-			if (type.isAssignableFrom(c.getClass())) {
-				Shape mask = c.getCollisionMask();
-				if (mask.contains(p))
-					return true;
-			}
-		}
-
-		return false;
-	}
-
 	private final Remover remover;
 
 	private List<ICollider> colliders;
@@ -36,10 +24,52 @@ public class CollisionService {
 		colliders = new ArrayList<>();
 	}
 
+	// *** Interface for GameObject ***
 	public void register(ICollider collider) {
 		colliders.add(collider);
 	}
+	
+	public <T extends ICollider> boolean checkCollisionAtPoint(Class<T> type, Point2D p) {
+		for (ICollider c : colliders) {
+			if (type.isAssignableFrom(c.getClass())) {
+				Shape mask = c.getCollisionMask();
+				if (mask.contains(p))
+					return true;
+			}
+		}
 
+		return false;
+	}
+	
+	public <T extends ICollider> boolean checkCollisionWith(
+			ICollider me,
+			int xDisplacement, 
+			int yDisplacement,
+			Class<T> otherType) {
+		// Note: It only works with rectangles
+		if (!(me.getCollisionMask() instanceof Rectangle2D)) {
+			throw new RuntimeException("Only works with Rectangle");
+		}
+			
+		for (ICollider c : colliders) {
+			if (c != me && otherType.isAssignableFrom(c.getClass())) {
+				Shape myMask = me.getCollisionMask();
+				Shape otherMask = c.getCollisionMask();
+				
+				if (myMask instanceof Rectangle2D) {
+					Rectangle2D rect = (Rectangle) myMask;
+					rect.setRect(rect.getX()+xDisplacement, rect.getY()+yDisplacement, rect.getWidth(), rect.getHeight());
+					if (otherMask.intersects(rect)) {
+						return true;
+					}
+				}
+			}
+		}
+		
+		return false;
+	}
+
+	// *** Interface for updater ***
 	public void update() {
 		// Remove objects if they are destroyed
 		remover.removeIfDestroyed(colliders);
@@ -51,16 +81,7 @@ public class CollisionService {
 					Shape myShape = me.getCollisionMask();
 					Shape otherShape = other.getCollisionMask();
 					
-					boolean intersect = false;
-					if (myShape instanceof Rectangle2D) {
-						intersect = otherShape.intersects((Rectangle2D) myShape);
-					}
-					else if (otherShape instanceof Rectangle2D) {
-						intersect = myShape.intersects((Rectangle2D) otherShape);
-					}
-					else {
-						intersect = testIntersection(myShape, otherShape);
-					}
+					boolean intersect = this.testIntersectionEfficient(myShape, otherShape);
 					
 					if (intersect) {
 						me.onCollision(other);
@@ -70,6 +91,18 @@ public class CollisionService {
 		}
 	}
 
+	private boolean testIntersectionEfficient(Shape shapeA, Shape shapeB) {
+		if (shapeA instanceof Rectangle2D) {
+			return shapeB.intersects((Rectangle2D) shapeA);
+		}
+		else if (shapeB instanceof Rectangle2D) {
+			return shapeA.intersects((Rectangle2D) shapeB);
+		}
+		else {
+			return testIntersection(shapeA, shapeB);
+		}
+	}
+	
 	private boolean testIntersection(Shape shapeA, Shape shapeB) {
 		Area areaA = new Area(shapeA);
 		areaA.intersect(new Area(shapeB));

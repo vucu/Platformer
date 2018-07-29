@@ -11,11 +11,20 @@ import platformer.gameobject.GameObject;
 import platformer.gameobject.properties.*;
 
 public class Player extends GameObject implements ICollider, ITransform, IUpdatable, IDrawable {
-
+	private final Services services; 
+	
+	private final double grav = 0.2;
+	private double hsp = 0;
+	private double vsp = 0;
+	private final double jumpspeed = 7;
+	private final double movespeed = 4;
+    
 	public Player(Services services) {
 		services.updateService.register(this);
 		services.collisionService.register(this);
 		services.cameraDrawingService.drawOnAllCameras(this);
+		
+		this.services = services;
 	}
 	
 	@Override
@@ -26,19 +35,19 @@ public class Player extends GameObject implements ICollider, ITransform, IUpdata
 
 	@Override
 	public void onUpdate() {
-		// TODO Auto-generated method stub
-		
+		this.y += 5;
 	}
 
 	@Override
 	public void onUpdateEnd() {
-		// TODO Auto-generated method stub
-		
+		// TODO Auto-generated method stub it is a bit slow 
 	}
-
+	
+	int x = 200;
+	int y = 200;
 	@Override
 	public Position getPosition() {
-		return new Position(200,200);
+		return new Position(x, y);
 	}
 
 	@Override

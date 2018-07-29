@@ -87,7 +87,7 @@ public class Drawer extends JPanel {
 	private Timer drawingTimer;
 	private final Rectangle display;
 
-	private final int fps = 60;
+	private final int fps = 30;
 
 	public Drawer(CameraDrawingService cameraService, KeyboardService keyboardService, Rectangle display,
 			ScreenDrawingService screenDrawingService) {

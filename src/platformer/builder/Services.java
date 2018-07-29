@@ -34,7 +34,7 @@ public class Services {
 	public final int gridSize = 32;
 
 	// The speed of the game
-	public final int gameSpeed = 60;
+	public final int gameSpeed = 30;
 
 	// The initial position of the tank
 	public final Position tank0Position = new Position(100, 100);
