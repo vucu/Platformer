@@ -50,6 +50,8 @@ public class Builder {
 				
 				new Ground(services);
 				new Player(services);
+				new Goal(services);
+				
 				
 				// *** Build main components and start game ***
 				buildMainComponents(services);

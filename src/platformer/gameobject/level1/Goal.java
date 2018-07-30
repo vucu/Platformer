@@ -2,57 +2,65 @@ package platformer.gameobject.level1;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.Shape;
+
+import javax.swing.JOptionPane;
 
 import platformer.builder.Services;
 import platformer.datastructures.Position;
 import platformer.gameobject.GameObject;
-import platformer.gameobject.SolidObject;
 import platformer.gameobject.properties.ICollider;
 import platformer.gameobject.properties.IDrawable;
-import platformer.gameobject.properties.ITransform;
 
-public class Ground extends SolidObject implements ICollider, ITransform, IDrawable {
+public class Goal extends GameObject implements ICollider, IDrawable {
+	int x;
+	int y;
+	int w;
+	int h;
 	
-	private final Rectangle world;
-	
-	public Ground(Services services) {
+	public Goal(Services services) {
 		services.collisionService.register(this);
 		services.cameraDrawingService.drawOnAllCameras(this);
 		
-		this.world = services.world;
+		// Put it at the end of the world
+		Rectangle world = services.world;
+		x = world.width - 300;
+		y = 0;
+		w = 32;
+		h = world.height;
 	}
-	
 	
 	@Override
 	public Position getPosition() {
-		int x = 0;
-		int y = world.height - 50;
-		return new Position(x, y);
+		return new Position(this.x, this.y);
 	}
 
 	@Override
 	public Shape getCollisionMask(Position at) {
-		return new Rectangle(at.x, at.y, world.width, 50);
+		return new Rectangle(at.x, at.y, this.w, this.h);
 	}
 
 	@Override
 	public void onCollision(ICollider other) {
-		// TODO Auto-generated method stub
+		if (this.isDestroyed()) return;
 		
+		// If collide with player, display winning message
+		if (other instanceof Player) {
+			JOptionPane.showMessageDialog(null, "You win");
+			this.destroy();
+		}
 	}
 
 	@Override
 	public int getDepth() {
-		return 0;
+		return -1;
 	}
 
 	@Override
 	public void onDraw(Graphics g) {
 		Rectangle mask = (Rectangle) this.getCollisionMask(this.getPosition());
-		g.setColor(Color.PINK);
+		g.setColor(Color.YELLOW);
 		g.fillRect(mask.x, mask.y, mask.width, mask.height);
 	}
 
