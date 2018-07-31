@@ -48,9 +48,13 @@ public class Builder {
 			public void run() {
 				Services services = new Services(Services.LEVEL_1);
 				
+				// Make the game objects
 				new Ground(services);
-				new Player(services);
+				Player player = new Player(services);
 				new Goal(services);
+				new Background(services);
+				
+				new Obstacle(services, player);
 				
 				
 				// *** Build main components and start game ***

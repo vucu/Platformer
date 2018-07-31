@@ -122,5 +122,4 @@ public class Player extends GameObject implements ICollider, IUpdatable, IDrawab
 		g.setColor(Color.CYAN);
 		g.fillRect(mask.x, mask.y, mask.width, mask.height);
 	}
-
 }
