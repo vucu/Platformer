@@ -5,6 +5,8 @@ import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.Shape;
 
+import javax.swing.JOptionPane;
+
 import com.sun.glass.events.KeyEvent;
 
 import platformer.builder.Services;
@@ -43,16 +45,25 @@ public class Player extends GameObject implements ICollider, IUpdatable, IDrawab
 	
 	@Override
 	public void onUpdateBegin() {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void onUpdate() {
+		// If the player falls too far below, it will die
+		Rectangle world = this.services.world;
+		int graceHeight = 30;
+		// It checks the player y. If player y is too large
+		// meaning the player is well below the world
+		// and it will die
+		if (this.y > world.y + world.height + graceHeight) {
+			this.die();
+		}
+		
+		// React to input
 		KeyboardService keyboard = this.services.keyboardService;
 		CollisionService collision = this.services.collisionService;
 		
-		// React to input
 		double hfactor = 1;
 		double vfactor = 0;
 		if (keyboard.check(KeyEvent.VK_SPACE)) {
@@ -121,5 +132,10 @@ public class Player extends GameObject implements ICollider, IUpdatable, IDrawab
 		Rectangle mask = (Rectangle) this.getCollisionMask(this.getPosition());
 		g.setColor(Color.CYAN);
 		g.fillRect(mask.x, mask.y, mask.width, mask.height);
+	}
+	
+	public void die() {
+		JOptionPane.showMessageDialog(null, "You lose");
+		this.destroy();
 	}
 }

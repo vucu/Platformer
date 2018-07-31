@@ -8,6 +8,7 @@ import platformer.datastructures.Position;
 import platformer.services.*;
 import platformer.services.delegates.Camera;
 import platformer.services.delegates.Remover;
+import platformer.services.delegates.SideScrollingCamera;
 
 public class Services {
 	static final int LEVEL_1 = 1;
@@ -15,7 +16,7 @@ public class Services {
 	Services(int settings) {
 		switch (settings) {
 		case LEVEL_1:
-			cameras = new Camera[] { new Camera(world, display.width, display.height) };
+			cameras = new Camera[] { new SideScrollingCamera(world, display.width, display.height) };
 			break;
 		default:
 			throw new RuntimeException("Invalid build setting");

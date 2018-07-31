@@ -48,14 +48,28 @@ public class Builder {
 			public void run() {
 				Services services = new Services(Services.LEVEL_1);
 				
+				
 				// Make the game objects
-				new Ground(services);
 				Player player = new Player(services);
 				new Goal(services);
 				new Background(services);
 				
 				new Obstacle(services, player);
 				
+				// Span multiple grounds
+				int x = 0;
+				int w = 0;
+				while (x < services.world.width) {
+					// Make a random width
+					w = (int) (Math.random() * 800);
+					
+					new Ground(services, x, w);
+					x = x + w;
+					
+					// Make a random gap
+					int gap = (int) (Math.random() * 100);
+					x = x + gap;
+				}
 				
 				// *** Build main components and start game ***
 				buildMainComponents(services);

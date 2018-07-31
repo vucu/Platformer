@@ -11,7 +11,10 @@ import java.awt.Rectangle;
 import platformer.datastructures.Position;
 import platformer.gameobject.properties.ITransform;
 
-public class Camera {
+// The game world is too big, but the screen is small
+// The camera specify the rectangle within the world
+// to draw on the screen
+public abstract class Camera {
 	public final Rectangle world;
 	public final int screenX;
 	public final int screenY;
@@ -22,8 +25,9 @@ public class Camera {
 	// Curent state of the camera
 	public int x = 0;
 	public int y = 0;
-	private ITransform trackingObject = null;
+	protected ITransform trackingObject = null;
 
+	// These constructors set the variables
 	public Camera(Rectangle world, int w, int h) {
 		this(world, 0, 0, w, h);
 	}
@@ -45,36 +49,8 @@ public class Camera {
 		this.trackingObject = trackingObject;
 	}
 
-	public void update() {
-		if (trackingObject == null) {
-			return;
-		}
-		int gap = 150;
-		Position objectPosition = trackingObject.getPosition();
-		if (objectPosition.x < x + gap) {
-			x = objectPosition.x - gap - 2;
-			if (x < world.x) {
-				x = world.x;
-			}
-		}
-		if (objectPosition.x > x + w - gap) {
-			x = objectPosition.x - w + gap + 2;
-			if (x + w > world.x + world.width) {
-				x = world.x + world.width - w;
-			}
-		}
-		if (objectPosition.y < y + gap) {
-			y = objectPosition.y - gap - 2;
-			if (y < world.y) {
-				y = world.y;
-			}
-		}
-		if (objectPosition.y > y + h - gap) {
-			y = objectPosition.y - h + gap + 2;
-			if (y + h > world.y + world.height) {
-				y = world.y + world.height - h;
-			}
-		}
-	}
+	// How the camera updates is up to the child class
+	public abstract void update();
+	
 
 }

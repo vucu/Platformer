@@ -59,8 +59,8 @@ public class Obstacle extends GameObject implements
 		if (other instanceof Player) {
 			Player thePlayer = (Player) other;
 			
-			// destroy the player
-			thePlayer.destroy();
+			// make the player die
+			thePlayer.die();
 		}
 	}
 
@@ -75,6 +75,7 @@ public class Obstacle extends GameObject implements
 	public void onUpdate() {
 		Position playerPosition = this.thePlayer.getPosition();
 		Position myPosition = this.getPosition();
+		
 		
 		if (myPosition.x < playerPosition.x - 400) {
 			// Jump ahead

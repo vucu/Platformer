@@ -15,27 +15,29 @@ import platformer.gameobject.properties.IDrawable;
 import platformer.gameobject.properties.ITransform;
 
 public class Ground extends SolidObject implements ICollider, ITransform, IDrawable {
-	
 	private final Rectangle world;
+	private final int width;
+	private final int x;
 	
-	public Ground(Services services) {
+	public Ground(Services services, int x, int width) {
 		services.collisionService.register(this);
 		services.cameraDrawingService.drawOnAllCameras(this);
 		
 		this.world = services.world;
+		this.width = width;
+		this.x = x;
 	}
 	
 	
 	@Override
 	public Position getPosition() {
-		int x = 0;
 		int y = world.height - 50;
-		return new Position(x, y);
+		return new Position(this.x, y);
 	}
 
 	@Override
 	public Shape getCollisionMask(Position at) {
-		return new Rectangle(at.x, at.y, world.width, 50);
+		return new Rectangle(at.x, at.y, this.width, 50);
 	}
 
 	@Override
