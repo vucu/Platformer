@@ -1,4 +1,4 @@
-package platformer.gameobject.level1;
+package platformer.gameobject;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -9,7 +9,6 @@ import javax.swing.JOptionPane;
 
 import platformer.builder.Services;
 import platformer.datastructures.Position;
-import platformer.gameobject.GameObject;
 import platformer.gameobject.properties.ICollider;
 import platformer.gameobject.properties.IDrawable;
 
@@ -45,9 +44,10 @@ public class Goal extends GameObject implements ICollider, IDrawable {
 	public void onCollision(ICollider other) {
 		if (this.isDestroyed()) return;
 		
-		// If collide with player, display winning message
+		// If collide with player, make the player win
 		if (other instanceof Player) {
-			JOptionPane.showMessageDialog(null, "You win");
+			Player thePlayer = (Player) other;
+			thePlayer.win();
 			this.destroy();
 		}
 	}

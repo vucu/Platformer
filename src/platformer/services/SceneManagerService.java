@@ -1,16 +1,14 @@
 package platformer.services;
 
 import platformer.builder.Builder;
+import platformer.datastructures.Level;
 
 public class SceneManagerService {
-	public static final int TITLE_SCENE = 0;
-	public static final int PLAY_SCENE = 1;
-
 	boolean transition = false;
 	boolean enable = true;
-	int scene = -1;
+	Level scene = Level.Level1;
 
-	public void goTo(int scene) {
+	public void goTo(Level scene) {
 		transition = true;
 		this.scene = scene;
 	}
@@ -19,15 +17,16 @@ public class SceneManagerService {
 		if (transition && enable) {
 			enable = false;
 
+			// Calll builder to build the correct level
 			switch (scene) {
-			case TITLE_SCENE:
+			case Level1:
 				Builder.buildLevel1();
 				break;
-
-			case PLAY_SCENE:
+			case Level2:
+				Builder.buildLevel2();
 				break;
 			default:
-				// Player just enter an invalid scene, nothing will change
+				// User enters an invalid scene, nothing will change
 				System.out.println("Invalid scene!");
 				transition = false;
 				enable = true;

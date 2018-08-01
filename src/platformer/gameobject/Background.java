@@ -1,14 +1,13 @@
-package platformer.gameobject.level1;
+package platformer.gameobject;
 
 import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 
 import platformer.builder.Services;
-import platformer.gameobject.GameObject;
 import platformer.gameobject.properties.IDrawable;
 
-public class Background extends GameObject implements IDrawable {
+public abstract class Background extends GameObject implements IDrawable {
 	private final Rectangle display;
 	private final BufferedImage image;
 	private final Rectangle world;
@@ -19,9 +18,13 @@ public class Background extends GameObject implements IDrawable {
 		// Tell the drawing service to draw this object
 		services.cameraDrawingService.drawOnAllCameras(this);
 		
-		this.image = services.imageService.getImage("background.png");
+		String fname = this.getBackgroundFileName();
+		this.image = services.imageService.getImage(fname);
 		this.world = services.world;
 	}
+	
+	// Let the children decide the file name
+	protected abstract String getBackgroundFileName();
 	
 	// Higher depth meaning it's lower on the screen
 	// If 2 objects are drawn in the same place,

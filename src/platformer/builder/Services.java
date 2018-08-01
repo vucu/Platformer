@@ -4,6 +4,7 @@ import java.awt.Rectangle;
 
 import javax.management.RuntimeErrorException;
 
+import platformer.datastructures.Level;
 import platformer.datastructures.Position;
 import platformer.services.*;
 import platformer.services.delegates.Camera;
@@ -11,11 +12,15 @@ import platformer.services.delegates.Remover;
 import platformer.services.delegates.SideScrollingCamera;
 
 public class Services {
-	static final int LEVEL_1 = 1;
 
-	Services(int settings) {
-		switch (settings) {
-		case LEVEL_1:
+	Services(Level level) {
+		this.level = level;
+		
+		switch (level) {
+		case Level1:
+			cameras = new Camera[] { new SideScrollingCamera(world, display.width, display.height) };
+			break;
+		case Level2:
 			cameras = new Camera[] { new SideScrollingCamera(world, display.width, display.height) };
 			break;
 		default:
@@ -25,6 +30,9 @@ public class Services {
 		cameraDrawingService = new CameraDrawingService(remover, cameras);
 	}
 
+	// The level the player currently at
+	public final Level level;
+	
 	// The size of the game world
 	public final Rectangle world = new Rectangle(0, 0, 3000, 600);
 

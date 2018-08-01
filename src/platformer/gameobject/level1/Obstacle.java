@@ -8,6 +8,7 @@ import java.awt.Shape;
 import platformer.builder.Services;
 import platformer.datastructures.Position;
 import platformer.gameobject.GameObject;
+import platformer.gameobject.Player;
 import platformer.gameobject.properties.ICollider;
 import platformer.gameobject.properties.IDrawable;
 import platformer.gameobject.properties.IUpdatable;

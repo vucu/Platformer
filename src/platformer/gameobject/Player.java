@@ -1,4 +1,4 @@
-package platformer.gameobject.level1;
+package platformer.gameobject;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -10,9 +10,8 @@ import javax.swing.JOptionPane;
 import com.sun.glass.events.KeyEvent;
 
 import platformer.builder.Services;
+import platformer.datastructures.Level;
 import platformer.datastructures.Position;
-import platformer.gameobject.GameObject;
-import platformer.gameobject.SolidObject;
 import platformer.gameobject.properties.*;
 import platformer.services.CollisionService;
 import platformer.services.KeyboardService;
@@ -29,7 +28,7 @@ public class Player extends GameObject implements ICollider, IUpdatable, IDrawab
 	double x;
 	double y;
     
-	public Player(Services services) {
+	public Player(Services services, Position initialPosition) {
 		services.updateService.register(this);
 		services.collisionService.register(this);
 		services.cameraDrawingService.drawOnAllCameras(this);
@@ -37,8 +36,8 @@ public class Player extends GameObject implements ICollider, IUpdatable, IDrawab
 		
 		// Put player at the beginning of world
 		Rectangle world = services.world;
-		x = world.x + 100;
-		y = world.y + world.height - 100;
+		x = initialPosition.x;
+		y = initialPosition.y;
 		
 		this.services = services;
 	}
@@ -136,6 +135,35 @@ public class Player extends GameObject implements ICollider, IUpdatable, IDrawab
 	
 	public void die() {
 		JOptionPane.showMessageDialog(null, "You lose");
+		Level currentLevel = this.services.level;
+		
+		// Restart the level
+		if (currentLevel == Level.Level1) {
+			// Call scene manager service to transition
+			this.services.sceneManagerService.goTo(Level.Level1);
+		}
+		else if (currentLevel == Level.Level2){
+			this.services.sceneManagerService.goTo(Level.Level2);
+		}
+		
+		this.destroy();
+	}
+	
+	// Call this method to make player win
+	public void win() {
+		JOptionPane.showMessageDialog(null, "You win");
+		Level currentLevel = this.services.level;
+		
+		if (currentLevel == Level.Level1) {
+			// Call scene manager service to transition
+			this.services.sceneManagerService.goTo(Level.Level2);
+		}
+		else {
+			// Win, quit the game
+			JOptionPane.showMessageDialog(null, "You win the game");
+			System.exit(0);
+		}
+		
 		this.destroy();
 	}
 }
