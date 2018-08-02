@@ -15,7 +15,7 @@ public class Powerup extends GameObject
 	private final Services services;
 	private final Player thePlayer;
 	
-	private final BufferedImage image; 
+	private BufferedImage image; 
 	
 	private final double grav = 0.4;
 	private double vsp = 0;
@@ -38,18 +38,20 @@ public class Powerup extends GameObject
 		this.thePlayer = player;
 		
 		this.jump();
-		
-		this.image = services.imageService.getImage(effect.getImageFileName());
 	}
 	
 	// Make the powerup jump ahead
-	private void jump() {
-		x = thePlayer.x + services.display.getWidth() - 200;
-		y = thePlayer.y - 200;
-		
+	private void jump() {		
 		// Move to next effect
 		this.effectNumber = (this.effectNumber + 1) % this.effects.length;
 		this.effect = this.effects[effectNumber];
+		
+		// Get image name
+		this.image = services.imageService.getImage(effect.getImageFileName());
+		
+		// calculate position
+		x = thePlayer.x + services.display.getWidth() - 200;
+		y = thePlayer.y - 100;
 	}
 	
 	@Override
@@ -76,7 +78,7 @@ public class Powerup extends GameObject
 		// If collide with ground, bounce back
 		if (other instanceof Ground) {
 			this.vsp = - Math.abs(this.vsp);
-			this.vsp -= 4;
+			this.vsp -= 3;
 		}
 	}
 
@@ -103,7 +105,7 @@ public class Powerup extends GameObject
 		
 		// Affect by gravity
 		this.vsp += this.grav;
-		if (this.vsp>10) this.vsp = 10;
+		if (this.vsp>8) this.vsp = 8;
 		this.y += this.vsp;
 	}
 
