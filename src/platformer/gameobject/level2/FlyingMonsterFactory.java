@@ -12,7 +12,7 @@ public class FlyingMonsterFactory extends GameObject
 	private final Services services;
 	private final Player thePlayer;
 	
-	private final int maxCooldown = 100;
+	private final int maxCooldown = 200;
 	private int cooldown = 0;
 	
 	public FlyingMonsterFactory(Services services, Player player) {

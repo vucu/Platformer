@@ -8,12 +8,16 @@ import platformer.datastructures.Position;
 import platformer.gameobject.Background;
 import platformer.gameobject.Goal;
 import platformer.gameobject.Ground;
+import platformer.gameobject.InvincibleEffect;
 import platformer.gameobject.Player;
+import platformer.gameobject.Powerup;
+import platformer.gameobject.SpeedEffect;
 import platformer.gameobject.level1.*;
 import platformer.gameobject.level2.Background2;
 import platformer.gameobject.level2.FlyingMonster;
 import platformer.gameobject.level2.FlyingMonsterFactory;
 import platformer.gameobject.level2.Ground2;
+import platformer.gameobject.level3.*;
 import platformer.maincomponents.*;
 
 public class Builder {
@@ -39,7 +43,6 @@ public class Builder {
 		updater = new Updater(services.animationService, 
 				services.cameraDrawingService, 
 				services.collisionService, 
-				services.gridMapService,
 				services.gameSpeed, 
 				services.sceneManagerService, 
 				services.screenDrawingService, 
@@ -83,6 +86,9 @@ public class Builder {
 					int gap = (int) (Math.random() * 100);
 					x = x + gap;
 				}
+				
+				// Make a powerup
+				new Powerup(services,player);
 				
 				// *** Build main components and start game ***
 				buildMainComponents(services);
@@ -143,6 +149,73 @@ public class Builder {
 				
 				// Create the monster factory
 				new FlyingMonsterFactory(services, player);
+				
+				// Make a powerup
+				new Powerup(services,player);
+				
+				// *** Build main components and start game ***
+				buildMainComponents(services);
+			}
+		});
+	}
+	
+	public static void buildLevel3() {
+		EventQueue.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				Services services = new Services(Level.Level3);
+				
+				// Make the game object
+				new Background3(services);
+				
+				// Span multiple grounds
+				Rectangle world = services.world;
+				Position firstPosition = null;
+				int x = 300;
+				int y = world.height/2;
+				int w = 0;
+				while (x < world.width) {
+					// Make a random width
+					w = 150 + (int) (Math.random() * 25);
+					
+					// Make a random elevation
+					y = (int) (y + Math.random() * 200 - 100);
+					
+					if (firstPosition == null) {
+						firstPosition = new Position(x,y);
+					}
+					
+					// But make sure the elevation is not too high nor low
+					if (y < world.y + 200) {
+						y = world.y + 200;
+					}
+					if (y > world.y + world.height - 200) {
+						y = world.y + world.height - 200;
+					}
+					
+					
+					new PlusShapeGround(services, x, y, w);
+					
+					
+					x = x + w;
+					
+					// Make a random gap
+					int gap = (int) (Math.random() * 100);
+					x = x + gap;
+				}
+				
+				// Place the player near the first ground
+				Position pos = firstPosition;
+				Player player = new Player(services, new Position(pos.x - 25, pos.y - 25));
+				
+				// Make boss
+				new Boss(services, player);
+				
+				// Make a powerup
+				new Powerup(services,player);
+				
+				// Make goal
+				new Goal(services);
 				
 				// *** Build main components and start game ***
 				buildMainComponents(services);

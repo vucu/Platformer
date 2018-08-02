@@ -61,7 +61,7 @@ public class Obstacle extends GameObject implements
 			Player thePlayer = (Player) other;
 			
 			// make the player die
-			thePlayer.die();
+			thePlayer.hurt();
 		}
 	}
 

@@ -11,7 +11,7 @@ public class Updater {
 	private Timer gameLogicTimer;
 
 	public Updater(AnimationService animationService, CameraDrawingService cameraDrawingService,
-			CollisionService collisionService, GridMapService gridMapService, int gameSpeed,
+			CollisionService collisionService, int gameSpeed,
 			SceneManagerService sceneManagerService, ScreenDrawingService screenDrawingService,
 			UpdateService updateService) {
 
@@ -25,8 +25,6 @@ public class Updater {
 			updateService.update();
 
 			collisionService.update();
-
-			gridMapService.update();
 
 			updateService.updateEnd();
 

@@ -17,13 +17,16 @@ public class SceneManagerService {
 		if (transition && enable) {
 			enable = false;
 
-			// Calll builder to build the correct level
+			// Call builder to build the correct level
 			switch (scene) {
 			case Level1:
 				Builder.buildLevel1();
 				break;
 			case Level2:
 				Builder.buildLevel2();
+				break;
+			case Level3:
+				Builder.buildLevel3();
 				break;
 			default:
 				// User enters an invalid scene, nothing will change

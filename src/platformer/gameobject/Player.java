@@ -49,6 +49,9 @@ public class Player extends GameObject implements ICollider, IUpdatable, IDrawab
 
 	@Override
 	public void onUpdate() {
+		// Decrease invincible duration
+		this.invincibleDuration--;
+		
 		// If the player falls too far below, it will die
 		Rectangle world = this.services.world;
 		int graceHeight = 30;
@@ -63,7 +66,15 @@ public class Player extends GameObject implements ICollider, IUpdatable, IDrawab
 		KeyboardService keyboard = this.services.keyboardService;
 		CollisionService collision = this.services.collisionService;
 		
+		// Make player faster if he is speeding up
 		double hfactor = 1;
+		if (this.speedUpDuration > 0) {
+			hfactor = 1.5;
+			
+			// Decrease the duration each frame
+			this.speedUpDuration--;
+		}
+		
 		double vfactor = 0;
 		if (keyboard.check(KeyEvent.VK_SPACE)) {
 			vfactor = 1;
@@ -133,18 +144,18 @@ public class Player extends GameObject implements ICollider, IUpdatable, IDrawab
 		g.fillRect(mask.x, mask.y, mask.width, mask.height);
 	}
 	
+	public void hurt() {
+		if (!this.isInvincible()) {
+			this.die();
+		}
+	}
+	
 	public void die() {
 		JOptionPane.showMessageDialog(null, "You lose");
 		Level currentLevel = this.services.level;
 		
 		// Restart the level
-		if (currentLevel == Level.Level1) {
-			// Call scene manager service to transition
-			this.services.sceneManagerService.goTo(Level.Level1);
-		}
-		else if (currentLevel == Level.Level2){
-			this.services.sceneManagerService.goTo(Level.Level2);
-		}
+		this.services.sceneManagerService.goTo(currentLevel);
 		
 		this.destroy();
 	}
@@ -158,6 +169,9 @@ public class Player extends GameObject implements ICollider, IUpdatable, IDrawab
 			// Call scene manager service to transition
 			this.services.sceneManagerService.goTo(Level.Level2);
 		}
+		else if (currentLevel == Level.Level2) {
+			this.services.sceneManagerService.goTo(Level.Level3);
+		}
 		else {
 			// Win, quit the game
 			JOptionPane.showMessageDialog(null, "You win the game");
@@ -165,5 +179,22 @@ public class Player extends GameObject implements ICollider, IUpdatable, IDrawab
 		}
 		
 		this.destroy();
+	}
+	
+	// Make player faster
+	private int speedUpDuration = 0;
+	public void speedUp() {
+		// Lasts 150 frames
+		speedUpDuration = 150;
+	}
+	
+	// Make player invincible
+	private int invincibleDuration = 0;
+	public void invincible() {
+		invincibleDuration = 150;
+	}
+	
+	private boolean isInvincible() {
+		return invincibleDuration>0;
 	}
 }

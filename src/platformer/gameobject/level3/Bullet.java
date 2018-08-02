@@ -1,4 +1,4 @@
-package platformer.gameobject.level2;
+package platformer.gameobject.level3;
 
 import java.awt.Graphics;
 import java.awt.Rectangle;
@@ -7,39 +7,34 @@ import java.awt.image.BufferedImage;
 
 import platformer.builder.Services;
 import platformer.datastructures.Position;
-import platformer.gameobject.*;
+import platformer.gameobject.GameObject;
+import platformer.gameobject.Player;
 import platformer.gameobject.properties.*;
 
-// Monster can fly towards the player
-public class FlyingMonster extends GameObject
+public class Bullet extends GameObject 
 	implements IDrawable, ICollider, IUpdatable {
-	
 	private final BufferedImage image;
-	private final Player thePlayer;
 	
-	int x;
-	int y;
-	public FlyingMonster(Services services, Player player) {
+	double x;
+	double y;
+	final double xSpeed;
+	final double ySpeed;
+	public Bullet(Services services, Position initial) {
 		services.cameraDrawingService.drawOnAllCameras(this);
 		services.collisionService.register(this);
 		services.updateService.register(this);
 		
-		// The initial position will be off camera
-		Rectangle display = services.display;
-		Position playerPosition = player.getPosition();
-		this.x = playerPosition.x + display.width + 100;
+		this.x = initial.x;
+		this.y = initial.y;
+		this.xSpeed = -6 + (Math.random() * 2);
+		this.ySpeed = -1 + (Math.random() * 2);
 		
-		// Initial y is random relative to player y
-		this.y = playerPosition.y + (int) (Math.random() * 400 - 200);
-		
-		this.image = services.imageService.getImage("flying-monster.png");
-		
-		this.thePlayer = player;
+		this.image = services.imageService.getImage("bullet.png");
 	}
 
 	@Override
 	public Position getPosition() {
-		return new Position(this.x, this.y);
+		return new Position((int) this.x, (int) this.y);
 	}
 
 	@Override
@@ -50,16 +45,9 @@ public class FlyingMonster extends GameObject
 
 	@Override
 	public void onUpdate() {
-		// Fly towards the player
-		Position playerPos = this.thePlayer.getPosition();
-		
-		this.x -= 5;
-		if (this.y<playerPos.y) {
-			this.y++;
-		}
-		else if (this.y>playerPos.y) {
-			this.y--;
-		}
+		// Update x and y based on speed
+		this.x += this.xSpeed;
+		this.y += this.ySpeed;
 	}
 
 	@Override
@@ -87,7 +75,7 @@ public class FlyingMonster extends GameObject
 	public int getDepth() {
 		// Draw it at a low depth, so it appears above
 		// other objects
-		return -5;
+		return -10;
 	}
 
 	@Override

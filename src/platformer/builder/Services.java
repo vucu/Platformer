@@ -15,19 +15,6 @@ public class Services {
 
 	Services(Level level) {
 		this.level = level;
-		
-		switch (level) {
-		case Level1:
-			cameras = new Camera[] { new SideScrollingCamera(world, display.width, display.height) };
-			break;
-		case Level2:
-			cameras = new Camera[] { new SideScrollingCamera(world, display.width, display.height) };
-			break;
-		default:
-			throw new RuntimeException("Invalid build setting");
-		}
-
-		cameraDrawingService = new CameraDrawingService(remover, cameras);
 	}
 
 	// The level the player currently at
@@ -39,24 +26,15 @@ public class Services {
 	// The size of the display
 	public final Rectangle display = new Rectangle(0, 0, 1000, 600);
 
-	// The size of a grid
-	public final int gridSize = 32;
-
 	// The speed of the game
 	public final int gameSpeed = 30;
 
-	// The initial position of the tank
-	public final Position tank0Position = new Position(100, 100);
-	public final Position tank1Position = new Position(world.width - 100, world.height - 100);
-
 	// *** Build delegates ***
-	public final Camera[] cameras;
+	public final Camera[] cameras = new Camera[] { new SideScrollingCamera(world, display.width, display.height) };;
 	public final Remover remover = new Remover();
 
 	// *** Build services ***
-	public final GridMapService gridMapService = new GridMapService(gridSize, world, remover, tank0Position,
-			tank1Position);
-	public final CameraDrawingService cameraDrawingService;
+	public final CameraDrawingService cameraDrawingService = new CameraDrawingService(remover, cameras);;
 	public final ScreenDrawingService screenDrawingService = new ScreenDrawingService(remover);
 	public final UpdateService updateService = new UpdateService(remover);
 	public final ImageService imageService = new ImageService();
