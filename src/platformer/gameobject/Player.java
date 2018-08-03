@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.Shape;
+import java.awt.image.BufferedImage;
 
 import javax.swing.JOptionPane;
 
@@ -13,13 +14,17 @@ import platformer.builder.Services;
 import platformer.datastructures.Level;
 import platformer.datastructures.Position;
 import platformer.gameobject.properties.*;
+import platformer.services.AnimationService;
 import platformer.services.CollisionService;
 import platformer.services.KeyboardService;
 
 public class Player extends GameObject implements ICollider, IUpdatable, IDrawable {
-	private final Services services; 
+	private final Services services;
+	private final AnimationService animationService;
+	
 	private final Runnable win;
 	private final Runnable lose;
+	
 	
 	private final double grav = 0.2;
 	private double hsp = 0;
@@ -29,6 +34,8 @@ public class Player extends GameObject implements ICollider, IUpdatable, IDrawab
 	
 	double x;
 	double y;
+	
+	private final BufferedImage defaultImage;
     
 	public Player(Services services, Position initialPosition, Runnable win, Runnable lose) {
 		services.updateService.register(this);
@@ -36,6 +43,10 @@ public class Player extends GameObject implements ICollider, IUpdatable, IDrawab
 		services.cameraDrawingService.drawOnAllCameras(this);
 		services.cameraDrawingService.track(this, 0);
 		
+		this.animationService = services.animationService;
+		this.animationService.register(this, "player-moving-%d.png", 4, 10, Integer.MAX_VALUE);
+		this.defaultImage = services.imageService.getImage("player-stand-still.png");
+				
 		this.win = win;
 		this.lose = lose;
 		
@@ -128,7 +139,7 @@ public class Player extends GameObject implements ICollider, IUpdatable, IDrawab
 
 	@Override
 	public Shape getCollisionMask(Position at) {
-		return new Rectangle(at.x, at.y, 20, 20);
+		return new Rectangle(at.x, at.y, defaultImage.getWidth(), defaultImage.getHeight());
 	}
 
 	@Override
@@ -139,20 +150,40 @@ public class Player extends GameObject implements ICollider, IUpdatable, IDrawab
 
 	@Override
 	public int getDepth() {
-		return 0;
+		return -2;
 	}
 
 	@Override
 	public void onDraw(Graphics g) {
 		Rectangle mask = (Rectangle) this.getCollisionMask(this.getPosition());
-		g.setColor(Color.CYAN);
-		g.fillRect(mask.x, mask.y, mask.width, mask.height);
+		
+		BufferedImage image = null;
+		// If stand still, get the current image, otherwise get the animating image
+		if (this.hsp < 0.2) {
+			image = this.defaultImage;
+		}
+		else {
+			image = this.animationService.getCurrentImage(this);
+		}
+		
+		g.drawImage(image, mask.x, mask.y, mask.width, mask.height, null);
 	}
 	
+	private int health = 100;
 	public void hurt() {
 		if (!this.isInvincible()) {
+			health -= 20;
+			
+			// Grace invincible period
+			this.invincibleDuration = 30;
+		}
+		if (health<=0) {
 			this.die();
 		}
+	}
+	
+	public int getHealth() {
+		return this.health;
 	}
 	
 	public void die() {

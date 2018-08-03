@@ -14,7 +14,7 @@ public class SoundService {
 		JFXPanel fxPanel = new JFXPanel(); 
 	}
 	
-	Map<String,MediaPlayer> players = new HashMap<>();
+	private static Map<String,MediaPlayer> players = new HashMap<>();
 	
 	public void playSound(String fname) {
 		this.loadSound(fname);
@@ -33,8 +33,22 @@ public class SoundService {
 		player.play();
 	}
 	
+	public void playSoundLoopNonStop(String fname) {
+		boolean isPlaying = players.containsKey(fname);
+		
+		this.loadSound(fname);
+		
+		if (!isPlaying) {
+			MediaPlayer player = players.get(fname);
+			player.stop();
+			player.setCycleCount(Integer.MAX_VALUE);
+			player.play();	
+		}
+	}
+	
+	
 	// Load the sound, but not playing it 
-	public void loadSound(String fname) {
+	private void loadSound(String fname) {
 		if (!players.containsKey(fname)) {
 			Media hit = new Media(new File(fname).toURI().toString());
 			MediaPlayer mediaPlayer = new MediaPlayer(hit);

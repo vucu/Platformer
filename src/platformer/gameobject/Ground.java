@@ -5,6 +5,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.Shape;
+import java.awt.image.BufferedImage;
 
 import platformer.builder.Services;
 import platformer.datastructures.Position;
@@ -13,9 +14,13 @@ import platformer.gameobject.properties.IDrawable;
 import platformer.gameobject.properties.ITransform;
 
 public abstract class Ground extends GameObject implements ICollider, ITransform, IDrawable {
+	private final BufferedImage image;
+	
 	public Ground(Services services) {
 		services.collisionService.register(this);
 		services.cameraDrawingService.drawOnAllCameras(this);
+		
+		this.image = services.imageService.getImage("ground.png");
 	}
 	
 	
@@ -43,8 +48,7 @@ public abstract class Ground extends GameObject implements ICollider, ITransform
 	@Override
 	public void onDraw(Graphics g) {
 		Rectangle mask = (Rectangle) this.getCollisionMask(this.getPosition());
-		g.setColor(Color.PINK);
-		g.fillRect(mask.x, mask.y, mask.width, mask.height);
+		g.drawImage(image, mask.x, mask.y, mask.width, mask.height, null);
 	}
 
 }

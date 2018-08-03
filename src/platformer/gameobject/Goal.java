@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.Shape;
+import java.awt.image.BufferedImage;
 
 import javax.swing.JOptionPane;
 
@@ -13,10 +14,10 @@ import platformer.gameobject.properties.ICollider;
 import platformer.gameobject.properties.IDrawable;
 
 public class Goal extends GameObject implements ICollider, IDrawable {
-	int x;
-	int y;
-	int w;
-	int h;
+	final int x;
+	final int y;
+	
+	private final BufferedImage image;
 	
 	public Goal(Services services) {
 		services.collisionService.register(this);
@@ -26,8 +27,8 @@ public class Goal extends GameObject implements ICollider, IDrawable {
 		Rectangle world = services.world;
 		x = world.width - 300;
 		y = 0;
-		w = 32;
-		h = world.height;
+		
+		this.image = services.imageService.getImage("goal.png");
 	}
 	
 	@Override
@@ -37,7 +38,7 @@ public class Goal extends GameObject implements ICollider, IDrawable {
 
 	@Override
 	public Shape getCollisionMask(Position at) {
-		return new Rectangle(at.x, at.y, this.w, this.h);
+		return new Rectangle(at.x, at.y, image.getWidth(), this.image.getHeight());
 	}
 
 	@Override
@@ -60,8 +61,7 @@ public class Goal extends GameObject implements ICollider, IDrawable {
 	@Override
 	public void onDraw(Graphics g) {
 		Rectangle mask = (Rectangle) this.getCollisionMask(this.getPosition());
-		g.setColor(Color.YELLOW);
-		g.fillRect(mask.x, mask.y, mask.width, mask.height);
+		g.drawImage(image, mask.x, mask.y, mask.width, mask.height, null);
 	}
 
 }

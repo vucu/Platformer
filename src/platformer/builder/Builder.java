@@ -7,16 +7,13 @@ import javax.swing.JOptionPane;
 
 import platformer.datastructures.Level;
 import platformer.datastructures.Position;
-import platformer.gameobject.Background;
 import platformer.gameobject.Goal;
-import platformer.gameobject.Ground;
-import platformer.gameobject.InvincibleEffect;
+import platformer.gameobject.HealthBar;
+import platformer.gameobject.Music;
 import platformer.gameobject.Player;
 import platformer.gameobject.Powerup;
-import platformer.gameobject.SpeedEffect;
 import platformer.gameobject.level1.*;
 import platformer.gameobject.level2.Background2;
-import platformer.gameobject.level2.FlyingMonster;
 import platformer.gameobject.level2.FlyingMonsterFactory;
 import platformer.gameobject.level2.Ground2;
 import platformer.gameobject.level3.*;
@@ -56,7 +53,8 @@ public class Builder {
 			frame.replaceMainPanel(drawer);
 		}
 	}
-
+	
+	private static int lives = 3;
 	public static void buildLevel1() {
 		EventQueue.invokeLater(new Runnable() {
 			@Override
@@ -64,14 +62,23 @@ public class Builder {
 				Services services = new Services(Level.Level1);
 				
 				
+				// Make music
+				new Music(services);
+				
 				// Make the game objects
 				Rectangle world = services.world;
-				Position initialPlayerPosition = new Position(world.x + 100, world.y + world.height - 100);
-				Player player = new Player(services, initialPlayerPosition, Builder::buildLevel2, Builder::buildLevel1);
+				Position initialPlayerPosition = new Position(world.x + 100, world.y + world.height - 125);
+				Player player = new Player(
+						services, 
+						initialPlayerPosition, 
+						Builder::buildLevel2, 
+						() -> { lives--; if (lives<=0) lives=3; buildLevel1(); });
 				new Goal(services);
 				new Background1(services);
 				
 				new Obstacle(services, player);
+				
+				new HealthBar(services, player, lives);
 				
 				// Span multiple grounds
 				int x = 0;
@@ -145,8 +152,14 @@ public class Builder {
 				
 				// Place the player on the first ground
 				Position p = firstGround.getPosition();
-				Position initialPlayerPosition = new Position(p.x + 10, p.y - 50);
-				Player player = new Player(services, initialPlayerPosition, Builder::buildLevel3, Builder::buildLevel2);
+				Position initialPlayerPosition = new Position(p.x + 10, p.y - 125);
+				Player player = new Player(
+						services, 
+						initialPlayerPosition, 
+						Builder::buildLevel3, 
+						() -> { lives--; if (lives<=0) {lives=3; buildLevel1(); } else buildLevel2(); });
+				
+				new HealthBar(services, player, lives);
 				
 				// Create the monster factory
 				new FlyingMonsterFactory(services, player);
@@ -207,7 +220,13 @@ public class Builder {
 				
 				// Place the player near the first ground
 				Position pos = firstPosition;
-				Player player = new Player(services, new Position(pos.x - 25, pos.y - 25), () -> { JOptionPane.showMessageDialog(null, "You win the game"); System.exit(0); }, Builder::buildLevel3);
+				Player player = new Player(
+						services, 
+						new Position(pos.x - 25, pos.y - 125), 
+						() -> { JOptionPane.showMessageDialog(null, "You win the game"); System.exit(0); }, 
+						() -> { lives--; if (lives<=0) {lives=3; buildLevel1(); } else buildLevel3(); });
+				
+				new HealthBar(services, player, lives);
 				
 				// Make boss
 				new Boss(services, player);

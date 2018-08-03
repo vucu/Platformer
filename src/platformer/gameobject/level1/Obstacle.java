@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.Shape;
+import java.awt.image.BufferedImage;
 
 import platformer.builder.Services;
 import platformer.datastructures.Position;
@@ -19,6 +20,8 @@ public class Obstacle extends GameObject implements
 	private final Player thePlayer;
 	private Position position;
 	
+	private final BufferedImage image;
+	
 	public Obstacle(Services services, Player player) {
 		services.collisionService.register(this);
 		services.cameraDrawingService.drawOnAllCameras(this);
@@ -26,6 +29,8 @@ public class Obstacle extends GameObject implements
 		
 		this.thePlayer = player;
 		this.position = new Position(400, 475);
+		
+		this.image = services.imageService.getImage("obstacle.png");
 	}
 	 
 	// The position of this object
@@ -37,20 +42,19 @@ public class Obstacle extends GameObject implements
 	@Override
 	public int getDepth() {
 		// To make sure the obstacle is drawn above the ground
-		return -5;
+		return -1;
 	}
 
 	@Override
 	public void onDraw(Graphics g) {
 		Rectangle mask = (Rectangle) this.getCollisionMask(this.getPosition());
-		g.setColor(Color.RED);
-		g.fillRect(mask.x, mask.y, mask.width, mask.height);
+		g.drawImage(image, mask.x, mask.y, mask.width, mask.height, null);
 	}
 
 	@Override
 	public Shape getCollisionMask(Position at) {
 		// The collision mask is a rectangle
-		return new Rectangle(at.x, at.y, 40, 75);
+		return new Rectangle(at.x, at.y, image.getWidth(), image.getHeight());
 	}
 
 	// Kill the player on collision
