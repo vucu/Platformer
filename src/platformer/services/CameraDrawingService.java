@@ -13,6 +13,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentSkipListMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import platformer.datastructures.*;
 import platformer.gameobject.*;
@@ -44,11 +47,11 @@ public class CameraDrawingService {
 			}
 		};
 
-		objectsRelativeToCamera = new HashMap<>();
-		objectsRelativeToWorld = new HashMap<>();
+		objectsRelativeToCamera = new ConcurrentHashMap<>();
+		objectsRelativeToWorld = new ConcurrentHashMap<>();
 
-		sortedObjectsRelativeToCamera = new ArrayList<>();
-		sortedObjectsRelativeToWorld = new ArrayList<>();
+		sortedObjectsRelativeToCamera = new CopyOnWriteArrayList<>();
+		sortedObjectsRelativeToWorld = new CopyOnWriteArrayList<>();
 	}
 
 	// *** Interface for GameObject ***

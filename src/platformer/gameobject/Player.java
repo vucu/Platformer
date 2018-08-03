@@ -92,13 +92,13 @@ public class Player extends GameObject implements ICollider, IUpdatable, IDrawab
 		if (vsp<10) vsp+=grav;
 		
 		// Can jump if there is a solid object below player 
-		if (collision.checkCollisionWith(this, 0, 1, SolidObject.class)) {
+		if (collision.checkCollisionWith(this, 0, 1, Ground.class)) {
 			vsp = vfactor * -this.jumpspeed;
 		}
 		
 		// Horizontal collision
-		if (collision.checkCollisionWith(this, (int) hsp, 0, SolidObject.class)) {
-			while (!collision.checkCollisionWith(this, (int) Math.signum(hsp), 0, SolidObject.class)) {
+		if (collision.checkCollisionWith(this, (int) hsp, 0, Ground.class)) {
+			while (!collision.checkCollisionWith(this, (int) Math.signum(hsp), 0, Ground.class)) {
 				this.x += Math.signum(hsp);
 			}
 			hsp = 0;
@@ -106,8 +106,8 @@ public class Player extends GameObject implements ICollider, IUpdatable, IDrawab
 		this.x += hsp;
 		
 		// Vertical collision
-		if (collision.checkCollisionWith(this, 0, (int) vsp, SolidObject.class)) {
-			while (!collision.checkCollisionWith(this, 0, (int) Math.signum(vsp), SolidObject.class)) {
+		if (collision.checkCollisionWith(this, 0, (int) vsp, Ground.class)) {
+			while (!collision.checkCollisionWith(this, 0, (int) Math.signum(vsp), Ground.class)) {
 				this.y += Math.signum(vsp);
 			}
 			vsp = 0;

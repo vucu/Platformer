@@ -7,6 +7,9 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.concurrent.ConcurrentSkipListSet;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import platformer.gameobject.properties.*;
 import platformer.maincomponents.*;
@@ -21,7 +24,7 @@ public class CollisionService {
 	public CollisionService(Remover remover) {
 		this.remover = remover;
 
-		colliders = new ArrayList<>();
+		colliders = new CopyOnWriteArrayList<>();
 	}
 
 	// *** Interface for GameObject ***

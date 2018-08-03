@@ -12,7 +12,7 @@ import platformer.gameobject.properties.ICollider;
 import platformer.gameobject.properties.IDrawable;
 import platformer.gameobject.properties.ITransform;
 
-public abstract class Ground extends SolidObject implements ICollider, ITransform, IDrawable {
+public abstract class Ground extends GameObject implements ICollider, ITransform, IDrawable {
 	public Ground(Services services) {
 		services.collisionService.register(this);
 		services.cameraDrawingService.drawOnAllCameras(this);
