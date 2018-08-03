@@ -18,6 +18,8 @@ import platformer.services.KeyboardService;
 
 public class Player extends GameObject implements ICollider, IUpdatable, IDrawable {
 	private final Services services; 
+	private final Runnable win;
+	private final Runnable lose;
 	
 	private final double grav = 0.2;
 	private double hsp = 0;
@@ -28,11 +30,14 @@ public class Player extends GameObject implements ICollider, IUpdatable, IDrawab
 	double x;
 	double y;
     
-	public Player(Services services, Position initialPosition) {
+	public Player(Services services, Position initialPosition, Runnable win, Runnable lose) {
 		services.updateService.register(this);
 		services.collisionService.register(this);
 		services.cameraDrawingService.drawOnAllCameras(this);
 		services.cameraDrawingService.track(this, 0);
+		
+		this.win = win;
+		this.lose = lose;
 		
 		// Put player at the beginning of world
 		Rectangle world = services.world;
@@ -151,33 +156,17 @@ public class Player extends GameObject implements ICollider, IUpdatable, IDrawab
 	}
 	
 	public void die() {
-		JOptionPane.showMessageDialog(null, "You lose");
-		Level currentLevel = this.services.level;
-		
-		// Restart the level
-		this.services.sceneManagerService.goTo(currentLevel);
-		
+		if (!this.isDestroyed()) {
+			lose.run();
+		}
 		this.destroy();
 	}
 	
 	// Call this method to make player win
 	public void win() {
-		JOptionPane.showMessageDialog(null, "You win");
-		Level currentLevel = this.services.level;
-		
-		if (currentLevel == Level.Level1) {
-			// Call scene manager service to transition
-			this.services.sceneManagerService.goTo(Level.Level2);
+		if (!this.isDestroyed()) {
+			win.run();
 		}
-		else if (currentLevel == Level.Level2) {
-			this.services.sceneManagerService.goTo(Level.Level3);
-		}
-		else {
-			// Win, quit the game
-			JOptionPane.showMessageDialog(null, "You win the game");
-			System.exit(0);
-		}
-		
 		this.destroy();
 	}
 	

@@ -12,7 +12,7 @@ public class Updater {
 
 	public Updater(AnimationService animationService, CameraDrawingService cameraDrawingService,
 			CollisionService collisionService, int gameSpeed,
-			SceneManagerService sceneManagerService, ScreenDrawingService screenDrawingService,
+			ScreenDrawingService screenDrawingService,
 			UpdateService updateService) {
 
 		gameLogicTimer = new Timer(1000 / gameSpeed, e -> {
@@ -27,8 +27,6 @@ public class Updater {
 			collisionService.update();
 
 			updateService.updateEnd();
-
-			sceneManagerService.update();
 		});
 		gameLogicTimer.start();
 	}

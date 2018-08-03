@@ -42,6 +42,5 @@ public class Services {
 	public final Image360Service image360Service = new Image360Service(imageService);
 	public final CollisionService collisionService = new CollisionService(remover);
 	public final KeyboardService keyboardService = new KeyboardService();
-	public final SceneManagerService sceneManagerService = new SceneManagerService();
 	public final SoundService soundService = new SoundService();
 }

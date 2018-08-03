@@ -3,6 +3,8 @@ package platformer.builder;
 import java.awt.EventQueue;
 import java.awt.Rectangle;
 
+import javax.swing.JOptionPane;
+
 import platformer.datastructures.Level;
 import platformer.datastructures.Position;
 import platformer.gameobject.Background;
@@ -44,7 +46,6 @@ public class Builder {
 				services.cameraDrawingService, 
 				services.collisionService, 
 				services.gameSpeed, 
-				services.sceneManagerService, 
 				services.screenDrawingService, 
 				services.updateService);
 
@@ -66,7 +67,7 @@ public class Builder {
 				// Make the game objects
 				Rectangle world = services.world;
 				Position initialPlayerPosition = new Position(world.x + 100, world.y + world.height - 100);
-				Player player = new Player(services, initialPlayerPosition);
+				Player player = new Player(services, initialPlayerPosition, Builder::buildLevel2, Builder::buildLevel1);
 				new Goal(services);
 				new Background1(services);
 				
@@ -145,7 +146,7 @@ public class Builder {
 				// Place the player on the first ground
 				Position p = firstGround.getPosition();
 				Position initialPlayerPosition = new Position(p.x + 10, p.y - 50);
-				Player player = new Player(services, initialPlayerPosition);
+				Player player = new Player(services, initialPlayerPosition, Builder::buildLevel3, Builder::buildLevel2);
 				
 				// Create the monster factory
 				new FlyingMonsterFactory(services, player);
@@ -206,7 +207,7 @@ public class Builder {
 				
 				// Place the player near the first ground
 				Position pos = firstPosition;
-				Player player = new Player(services, new Position(pos.x - 25, pos.y - 25));
+				Player player = new Player(services, new Position(pos.x - 25, pos.y - 25), () -> { JOptionPane.showMessageDialog(null, "You win the game"); System.exit(0); }, Builder::buildLevel3);
 				
 				// Make boss
 				new Boss(services, player);
